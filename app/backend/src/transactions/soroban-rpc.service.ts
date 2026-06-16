@@ -254,7 +254,7 @@ export class SorobanRpcService {
 
     if (sendResult.status === "ERROR") {
       const detail = sendResult.errorResult?.result().switch().name ?? "unknown";
-      if (detail === "txBAD_SEQ") {
+      if (detail === "txBadSeq") {
         const err = new Error(
           `${SOROBAN_ERROR_CODES.DUPLICATE_SUBMISSION}: sequence conflict`,
         );
