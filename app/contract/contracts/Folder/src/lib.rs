@@ -117,7 +117,7 @@ impl RustAcademyContract {
         to: Address,
         salt: Bytes,
     ) -> Result<bool, RustAcademyError> {
-        admin::guard_withdraw(&env, PauseFlag::Withdrawal as u64)?;
+        admin::guard_withdraw(&env, PauseFlag::Withdrawal)?;
         escrow::withdraw(&env, amount, to, salt)
     }
 
@@ -215,7 +215,7 @@ impl RustAcademyContract {
         timeout_secs: u64,
         arbiter: Option<Address>,
     ) -> Result<BytesN<32>, RustAcademyError> {
-        admin::guard_deposit(&env, PauseFlag::Deposit as u64)?;
+        admin::guard_deposit(&env, PauseFlag::Deposit)?;
         escrow::deposit(&env, token, amount, owner, salt, timeout_secs, arbiter)
     }
 
@@ -341,7 +341,7 @@ impl RustAcademyContract {
         timeout_secs: u64,
         arbiter: Option<Address>,
     ) -> Result<(), RustAcademyError> {
-        admin::guard_deposit(&env, PauseFlag::DepositWithCommitment as u64)?;
+        admin::guard_deposit(&env, PauseFlag::DepositWithCommitment)?;
         escrow::deposit_with_commitment(
             &env,
             from,
@@ -394,7 +394,7 @@ impl RustAcademyContract {
         timeout_secs: u64,
         arbiter: Option<Address>,
     ) -> Result<BytesN<32>, RustAcademyError> {
-        admin::guard_deposit(&env, PauseFlag::Deposit as u64)?;
+        admin::guard_deposit(&env, PauseFlag::Deposit)?;
         escrow::deposit_partial(
             &env,
             token,
@@ -431,7 +431,7 @@ impl RustAcademyContract {
         payer: Address,
         payment_amount: i128,
     ) -> Result<(), RustAcademyError> {
-        admin::guard_deposit(&env, PauseFlag::Deposit as u64)?;
+        admin::guard_deposit(&env, PauseFlag::Deposit)?;
         escrow::partial_payment(&env, commitment, payer, payment_amount)
     }
 
@@ -455,7 +455,7 @@ impl RustAcademyContract {
         commitment: BytesN<32>,
         caller: Address,
     ) -> Result<(), RustAcademyError> {
-        admin::guard_refund(&env, PauseFlag::Refund as u64)?;
+        admin::guard_refund(&env, PauseFlag::Refund)?;
         escrow::refund(&env, commitment, caller)
     }
 
@@ -952,7 +952,7 @@ impl RustAcademyContract {
         env: Env,
         params: StealthDepositParams,
     ) -> Result<BytesN<32>, RustAcademyError> {
-        admin::guard_stealth(&env, PauseFlag::Deposit as u64)?;
+        admin::guard_stealth(&env, PauseFlag::Deposit)?;
         stealth::register_ephemeral_key(&env, params)
     }
 
@@ -984,7 +984,7 @@ impl RustAcademyContract {
         spend_pub: BytesN<32>,
         stealth_address: BytesN<32>,
     ) -> Result<bool, RustAcademyError> {
-        admin::guard_stealth(&env, PauseFlag::Withdrawal as u64)?;
+        admin::guard_stealth(&env, PauseFlag::Withdrawal)?;
         stealth::stealth_withdraw(&env, recipient, eph_pub, spend_pub, stealth_address)
     }
 
