@@ -4,7 +4,7 @@ import { CreateTutorProfileDto } from './dto/create-tutor-profile.dto';
 import { UpdateTutorProfileDto } from './dto/update-tutor-profile.dto';
 import { RateTutorDto } from './dto/rate-tutor.dto';
 
-interface TutorEarningsSummary {
+export interface TutorEarningsSummary {
   tutorId: string;
   earnedXlm: number;
   totalPaidOut: number;

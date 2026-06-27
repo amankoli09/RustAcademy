@@ -1,18 +1,31 @@
 import { Module } from '@nestjs/common';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ChallengesModule } from './challenges/challenges.module';
+import { RewardsModule } from './rewards/rewards.module';
+import { SecurityModule } from './security/security.module';
+import { SubmissionModule } from './submissions/submission.module';
+import { TutorProfileModule } from './users/tutor-profile.module';
 import { UserProfileModule } from './users/user-profile.module';
 
 @Module({
   imports: [
-    ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 10,
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        limit: 10,
+        ttl: 60_000,
+      },
+    ]),
     UserProfileModule,
+    TutorProfileModule,
+    SubmissionModule,
+    RewardsModule,
+    SecurityModule,
+    ChallengesModule,
   ],
+  controllers: [AppController],
   providers: [
     AppService,
     {
@@ -20,13 +33,5 @@ import { UserProfileModule } from './users/user-profile.module';
       useClass: ThrottlerGuard,
     },
   ],
-import { TutorProfileModule } from './users/tutor-profile.module';
-import { SubmissionModule } from './submissions/submission.module';
-import { RewardsModule } from './rewards/rewards.module';
-import { SecurityModule } from './security/security.module';
-
-@Module({
-  imports: [TutorProfileModule, SubmissionModule, RewardsModule, SecurityModule],
-  controllers: [AppController],
 })
 export class AppModule {}
