@@ -1,6 +1,8 @@
 export { RewardsModule } from './rewards.module';
 export { RewardsService } from './rewards.service';
 export { RewardsController } from './rewards.controller';
+export { StreakService } from './streak.service';
+export { StreakController } from './streak.controller';
 export {
   MAX_LEVEL,
   levelForXp,
@@ -12,3 +14,8 @@ export type {
   UserProgressionResponse,
   ThresholdsResponse,
 } from './interfaces/rewards.interfaces';
+export type {
+  StreakResponse,
+  CheckinResponse,
+  StreakRecord,
+} from './interfaces/streak.interfaces';
