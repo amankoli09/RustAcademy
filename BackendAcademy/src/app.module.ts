@@ -16,6 +16,7 @@ import { SocialModule } from './social/social.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
 import { LessonModule } from './lessons/lesson.module';
 import { TaskModule } from './tasks/task.module';
+import { ProgressModule } from './courses/progress/progress.module';
 import { AppConfigModule } from './config/config.module';
 import { ContractsModule } from './contracts/contracts.module';
 
@@ -42,6 +43,7 @@ import { ContractsModule } from './contracts/contracts.module';
     OnboardingModule,
     LessonModule,
     TaskModule,
+    ProgressModule,
   ],
   controllers: [AppController],
   providers: [
