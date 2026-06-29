@@ -16,6 +16,7 @@ import { SocialModule } from './social/social.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
 import { LessonModule } from './lessons/lesson.module';
 import { TaskModule } from './tasks/task.module';
+import { LoggingModule } from './logging/logging.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { TaskModule } from './tasks/task.module';
     OnboardingModule,
     LessonModule,
     TaskModule,
+    LoggingModule,
   ],
   controllers: [AppController],
   providers: [
