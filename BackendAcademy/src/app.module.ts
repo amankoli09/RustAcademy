@@ -18,6 +18,7 @@ import { LessonModule } from './lessons/lesson.module';
 import { TaskModule } from './tasks/task.module';
 import { AppConfigModule } from './config/config.module';
 import { ContractsModule } from './contracts/contracts.module';
+import { AssetsModule } from './assets/assets.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ContractsModule } from './contracts/contracts.module';
     OnboardingModule,
     LessonModule,
     TaskModule,
+    AssetsModule,
   ],
   controllers: [AppController],
   providers: [
