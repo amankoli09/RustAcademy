@@ -44,7 +44,7 @@ use soroban_sdk::{contracttype, Address, Bytes, BytesN, Env, Vec};
 use crate::errors::RustAcademyError;
 use crate::types::{
     DisputeExpiry, DisputeExpiryAction, DisputeVote, EscrowEntry, FeeConfig, Role,
-    StealthEscrowEntry,
+    StealthEscrowEntry, PerAssetFeeConfig, OracleFeeConfig,
 };
 
 /// Record type for TTL policy selection.
@@ -69,7 +69,7 @@ pub struct TtlPolicy {
 }
 
 /// Get TTL policy for a given record type.
-fn get_ttl_policy(record_type: RecordType) -> TtlPolicy {
+pub fn get_ttl_policy(record_type: RecordType) -> TtlPolicy {
     match record_type {
         RecordType::Escrow => TtlPolicy {
             threshold: LEDGER_THRESHOLD,
@@ -88,6 +88,9 @@ fn get_ttl_policy(record_type: RecordType) -> TtlPolicy {
             ttl: SIX_MONTHS_IN_LEDGERS,
         },
         RecordType::EscrowIdTombstone => TtlPolicy {
+            threshold: LEDGER_THRESHOLD,
+            ttl: SIX_MONTHS_IN_LEDGERS,
+        },
         RecordType::DisputeExpiry => TtlPolicy {
             threshold: LEDGER_THRESHOLD,
             ttl: SIX_MONTHS_IN_LEDGERS,
@@ -425,7 +428,6 @@ pub fn assert_post_upgrade_invariants(env: &Env) -> Result<(), &'static str> {
     // Legacy dispute votes are removed for Spent/Refunded escrows.
 
     Ok(())
-}
 }
 
 // -----------------------------------------------------------------------------
@@ -893,6 +895,26 @@ pub fn put_escrow_id_mapping(env: &Env, escrow_id: &BytesN<32>, commitment: &Byt
 /// escrow entry; that must be done separately via remove_escrow.
 pub fn remove_escrow_id_mapping(env: &Env, escrow_id: &BytesN<32>) {
     let key = DataKey::EscrowIdMap(escrow_id.clone());
+    env.storage().persistent().remove(&key);
+}
+
+/// Record the reverse index `commitment → escrow_id`, enabling terminal-escrow
+/// cleanup to locate and remove the dedup mapping without the creation salt.
+pub fn put_commitment_escrow_id(env: &Env, commitment: &Bytes, escrow_id: &BytesN<32>) {
+    let key = DataKey::CommitmentEscrowId(commitment.clone());
+    env.storage().persistent().set(&key, escrow_id);
+    set_or_extend_ttl(env, &key, RecordType::EscrowIdMap);
+}
+
+/// Look up the `escrow_id` recorded for a commitment, if any.
+pub fn get_commitment_escrow_id(env: &Env, commitment: &Bytes) -> Option<BytesN<32>> {
+    let key = DataKey::CommitmentEscrowId(commitment.clone());
+    env.storage().persistent().get(&key)
+}
+
+/// Remove the reverse `commitment → escrow_id` index (Issue #51 cleanup).
+pub fn remove_commitment_escrow_id(env: &Env, commitment: &Bytes) {
+    let key = DataKey::CommitmentEscrowId(commitment.clone());
     env.storage().persistent().remove(&key);
 }
 
